@@ -11,20 +11,15 @@
       color: white;
       text-align: center;
       margin: 0;
-      padding: 0;
     }
     header {
       background: #6f3cff;
       padding: 20px;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2em;
-    }
     main {
       padding: 40px 20px;
     }
-    .product {
+    .product, .box {
       background: #1e1e1e;
       margin: 20px auto;
       padding: 20px;
@@ -35,22 +30,26 @@
       width: 90%;
       padding: 10px;
       margin: 10px 0;
-      border-radius: 5px;
+      border-radius: 6px;
       border: none;
     }
     button {
       padding: 15px 30px;
-      font-size: 16px;
       border: none;
       border-radius: 8px;
       background: #6f3cff;
       color: white;
+      font-size: 16px;
       cursor: pointer;
     }
-    footer {
+    #adminView {
+      display: none;
+      text-align: left;
+      max-width: 600px;
+      margin: auto;
+      background: #000;
       padding: 20px;
-      font-size: 0.9em;
-      color: #aaa;
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -58,10 +57,10 @@
 
 <header>
   <h1>TG Butikk</h1>
+  <p>Mini-butikk – manuell bestilling</p>
 </header>
 
 <main>
-  <h2>Produkter</h2>
 
   <div class="product">
     <h3>Produkt 1</h3>
@@ -73,23 +72,84 @@
     <p>Pris: 200 kr</p>
   </div>
 
-  <h2>Bestill her</h2>
-  <form onsubmit="alert('Takk! Sjekk Vipps for betaling 🙂'); return false;">
-    <input type="text" placeholder="Navn" required><br>
-    <input type="email" placeholder="E-post" required><br>
-    <textarea placeholder="Adresse for shipping" rows="3" required></textarea><br>
-    <button type="submit">Send bestilling</button>
-  </form>
+  <div class="box">
+    <h2>Bestill</h2>
+    <form onsubmit="handleSubmit(); return false;">
+      <input id="name" type="text" placeholder="Navn" required>
+      <input id="email" type="email" placeholder="E-post">
+      <textarea id="address" placeholder="Adresse for shipping" rows="3"></textarea>
+      <button type="submit">Send bestilling</button>
+    </form>
 
-  <p style="margin-top:20px;">
-    Betaling skjer manuelt via Vipps:<br>
-    Send til <b>929 36 381</b> med melding: “TG Butikk – Produktnavn”
-  </p>
+    <p style="font-size:14px; margin-top:15px;">
+      Betaling skjer manuelt via Vipps etter bestilling.
+    </p>
+  </div>
+
+  <div id="adminView"></div>
+
 </main>
 
-<footer>
-  TG Butikk – Mini-butikk for moro skyld. Betaling skjer manuelt.
-</footer>
+<script>
+const ADMIN_PASSWORD = "44216381"; // 🔴 ENDRE DENNE
+
+function handleSubmit() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const address = document.getElementById("address").value;
+
+  // ADMIN MODE
+  if (name === ADMIN_PASSWORD) {
+    showAdmin();
+    return;
+  }
+
+  // NORMAL BESTILLING
+  const order = {
+    navn: name,
+    email: email,
+    adresse: address,
+    tid: new Date().toLocaleString()
+  };
+
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.push(order);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  alert("Bestilling mottatt! 💜 Betal med Vipps.");
+  document.querySelector("form").reset();
+}
+
+function showAdmin() {
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  let html = "<h2>📦 Bestillinger</h2>";
+
+  if (orders.length === 0) {
+    html += "<p>Ingen bestillinger ennå.</p>";
+  }
+
+  orders.forEach((o, i) => {
+    html += `
+      <hr>
+      <b>#${i + 1}</b><br>
+      Navn: ${o.navn}<br>
+      E-post: ${o.email}<br>
+      Adresse: ${o.adresse}<br>
+      Tid: ${o.tid}<br>
+    `;
+  });
+
+  html += `<br><button onclick="closeAdmin()">Lukk</button>`;
+
+  const admin = document.getElementById("adminView");
+  admin.innerHTML = html;
+  admin.style.display = "block";
+}
+
+function closeAdmin() {
+  document.getElementById("adminView").style.display = "none";
+}
+</script>
 
 </body>
 </html>
