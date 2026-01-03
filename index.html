@@ -45,9 +45,17 @@
       font-size: 16px;
       cursor: pointer;
     }
+    .danger {
+      background: #c0392b;
+    }
+    .small {
+      padding: 8px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
     #adminPage {
       display: none;
-      max-width: 700px;
+      max-width: 720px;
       margin: 20px auto;
       background: #000;
       padding: 20px;
@@ -98,7 +106,6 @@
 
 </main>
 
-<!-- ADMIN SIDE -->
 <div id="adminPage"></div>
 
 <script>
@@ -109,7 +116,6 @@ function submitOrder() {
   const email = document.getElementById("email").value.trim();
   const address = document.getElementById("address").value.trim();
 
-  // ADMIN MODE
   if (name === ADMIN_PASSWORD) {
     openAdmin();
     return;
@@ -123,10 +129,7 @@ function submitOrder() {
   };
 
   const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-
-  // 🔥 NYESTE FØRST
-  orders.unshift(order);
-
+  orders.unshift(order); // nyeste først
   localStorage.setItem("orders", JSON.stringify(orders));
 
   alert("Bestilling mottatt! 💜 Betal med Vipps.");
@@ -135,16 +138,17 @@ function submitOrder() {
 
 function openAdmin() {
   document.getElementById("shop").style.display = "none";
-
   const admin = document.getElementById("adminPage");
   admin.style.display = "block";
+  renderOrders();
+}
 
+function renderOrders() {
   const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-
   let html = "<h2>📦 Bestillinger (nyeste først)</h2>";
 
   if (orders.length === 0) {
-    html += "<p>Ingen bestillinger ennå.</p>";
+    html += "<p>Ingen bestillinger.</p>";
   }
 
   orders.forEach((o, i) => {
@@ -154,16 +158,32 @@ function openAdmin() {
       Navn: ${o.navn}<br>
       E-post: ${o.email}<br>
       Adresse: ${o.adresse}<br>
-      Tid: ${o.tid}
+      Tid: ${o.tid}<br>
+      <button class="small danger" onclick="deleteOrder(${i})">🗑 Slett</button>
     `;
   });
 
   html += `
-    <br>
+    <hr>
+    <button class="danger" onclick="clearAll()">Tøm alle bestillinger</button>
     <button onclick="closeAdmin()">⬅ Tilbake til butikk</button>
   `;
 
-  admin.innerHTML = html;
+  document.getElementById("adminPage").innerHTML = html;
+}
+
+function deleteOrder(index) {
+  const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+  orders.splice(index, 1);
+  localStorage.setItem("orders", JSON.stringify(orders));
+  renderOrders();
+}
+
+function clearAll() {
+  if (confirm("Er du SIKKER på at du vil slette ALLE bestillinger?")) {
+    localStorage.removeItem("orders");
+    renderOrders();
+  }
 }
 
 function closeAdmin() {
