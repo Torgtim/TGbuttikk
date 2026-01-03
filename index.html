@@ -10,33 +10,86 @@
       background: #111;
       color: white;
       text-align: center;
-      padding: 40px;
+      margin: 0;
+      padding: 0;
     }
-    .box {
-      max-width: 500px;
-      margin: auto;
+    header {
+      background: #6f3cff;
+      padding: 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+    main {
+      padding: 40px 20px;
+    }
+    .product {
       background: #1e1e1e;
-      padding: 30px;
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 400px;
       border-radius: 10px;
     }
-    a {
-      display: block;
-      margin-top: 20px;
-      padding: 15px;
+    input, textarea {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
       background: #6f3cff;
       color: white;
-      text-decoration: none;
-      border-radius: 8px;
+      cursor: pointer;
+    }
+    footer {
+      padding: 20px;
+      font-size: 0.9em;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
 
-  <div class="box">
-    <h1>TG Butikk</h1>
-    <p>Mini-butikk – manuell bestilling</p>
-    <a href="#">Produkter (kommer)</a>
+<header>
+  <h1>TG Butikk</h1>
+</header>
+
+<main>
+  <h2>Produkter</h2>
+
+  <div class="product">
+    <h3>Produkt 1</h3>
+    <p>Pris: 100 kr</p>
   </div>
+
+  <div class="product">
+    <h3>Produkt 2</h3>
+    <p>Pris: 200 kr</p>
+  </div>
+
+  <h2>Bestill her</h2>
+  <form onsubmit="alert('Takk! Sjekk Vipps for betaling 🙂'); return false;">
+    <input type="text" placeholder="Navn" required><br>
+    <input type="email" placeholder="E-post" required><br>
+    <textarea placeholder="Adresse for shipping" rows="3" required></textarea><br>
+    <button type="submit">Send bestilling</button>
+  </form>
+
+  <p style="margin-top:20px;">
+    Betaling skjer manuelt via Vipps:<br>
+    Send til <b>99 99 99 99</b> med melding: “TG Butikk – Produktnavn”
+  </p>
+</main>
+
+<footer>
+  TG Butikk – Mini-butikk for moro skyld. Betaling skjer manuelt.
+</footer>
 
 </body>
 </html>
