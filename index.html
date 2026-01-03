@@ -145,7 +145,7 @@ function openAdmin() {
 
 function renderOrders() {
   const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-  let html = "<h2>📦 Bestillinger (nyeste først)</h2>";
+  let html = "<h2>📦 Bestillinger</h2>";
 
   if (orders.length === 0) {
     html += "<p>Ingen bestillinger.</p>";
